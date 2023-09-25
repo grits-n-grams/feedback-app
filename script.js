@@ -7,6 +7,7 @@ const formEl = document.querySelector(".form");
 const feedbackListEl = document.querySelector(".feedbacks");
 const submitBtnEl = document.querySelector(".submit-btn");
 const spinnerEl = document.querySelector(".spinner");
+const hashtagListEl = document.querySelector(".hashtags");
 
 const renderFeedbackItem = (feedbackItem) => {
   const feedBackItemHtml = `
@@ -136,3 +137,28 @@ fetch(`${BASE_API_URL}/feedbacks`)
   .catch((error) => {
     feedbackListEl.textContent = `Failed to fetch feedback items: ${error.message}`;
   });
+
+//-->Hashtag list Component
+const clickHandler2 = (e) => {
+  const clickdEl = e.target;
+  console.log(clickdEl);
+
+  if (clickdEl.className === "hashtags") return;
+
+  const companyNameFromHash = clickdEl.textContent
+    .substring(1)
+    .toLowerCase()
+    .trim();
+
+  feedbackListEl.childNodes.forEach((childNode) => {
+    if (childNode.nodeType === 3) return;
+    const companyNameFromFeedbackItem = childNode
+      .querySelector(".feedback__company")
+      .textContent.toLowerCase()
+      .trim();
+    if (companyNameFromHash !== companyNameFromFeedbackItem) {
+      childNode.remove();
+    }
+  });
+};
+hashtagListEl.addEventListener("click", clickHandler2);

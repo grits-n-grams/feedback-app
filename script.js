@@ -1,3 +1,4 @@
+//--Global Variables
 const MAX_CHARS = 150;
 const BASE_API_URL = "https://bytegrad.com/course-assets/js/1/api";
 const textareaEl = document.querySelector(".form__textarea");
@@ -78,7 +79,7 @@ const submitHandler = (e) => {
 
   renderFeedbackItem(feedbackItem);
 
-  //--send to server
+  //--POST Request
   fetch(`${BASE_API_URL}/feedbacks`, {
     method: "POST",
     body: JSON.stringify(feedbackItem),
@@ -105,7 +106,24 @@ const submitHandler = (e) => {
 
 formEl.addEventListener("submit", submitHandler);
 
-//-- FEEDBACK LIST COMPONENT
+//--Feedback List
+const clickHandler = (e) => {
+  const clickdEl = e.target;
+  console.log(clickdEl);
+  const upvoteIntention = clickdEl.className.includes("upvote");
+
+  if (upvoteIntention) {
+    const upvoteBtnEl = clickdEl.closest(".upvote");
+    upvoteBtnEl.disabled = true;
+    const upvoteCountEl = upvoteBtnEl.querySelector(".upvote__count");
+    let upvoteCount = +upvoteCountEl.textContent;
+    upvoteCountEl.textContent = ++upvoteCount;
+  } else {
+    clickdEl.closest(".feedback").classList.toggle("feedback--expand");
+  }
+};
+feedbackListEl.addEventListener("click", clickHandler);
+//-- GET Request
 
 fetch(`${BASE_API_URL}/feedbacks`)
   .then((res) => res.json())
